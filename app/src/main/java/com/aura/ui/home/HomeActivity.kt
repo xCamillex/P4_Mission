@@ -42,7 +42,6 @@ class HomeActivity : AppCompatActivity()
         finish()
         true
       }
-
       else            -> super.onOptionsItemSelected(item)
     }
   }
