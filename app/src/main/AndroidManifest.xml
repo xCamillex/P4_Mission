@@ -32,6 +32,11 @@
       android:exported="false"
       />
 
+    <activity
+      android:name=".ui.transfer.TransferActivity"
+      android:exported="false"
+      />
+
   </application>
 
 </manifest>
