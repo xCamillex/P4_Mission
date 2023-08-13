@@ -6,4 +6,5 @@
   <string name="action_sign_in">Connexion</string>
 
   <string name="balance">Balance :</string>
+  <string name="disconnect">Déconnexion</string>
 </resources>
