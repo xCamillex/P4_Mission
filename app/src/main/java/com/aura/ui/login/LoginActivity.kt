@@ -1,9 +1,11 @@
 package com.aura.ui.login
 
+import android.content.Intent
 import android.os.Bundle
 import android.view.View
 import androidx.appcompat.app.AppCompatActivity
 import com.aura.databinding.ActivityLoginBinding
+import com.aura.ui.home.HomeActivity
 
 class LoginActivity : AppCompatActivity()
 {
@@ -24,6 +26,11 @@ class LoginActivity : AppCompatActivity()
 
     login.setOnClickListener {
       loading.visibility = View.VISIBLE
+
+      val intent = Intent(this@LoginActivity, HomeActivity::class.java)
+      startActivity(intent)
+
+      finish()
     }
   }
 
