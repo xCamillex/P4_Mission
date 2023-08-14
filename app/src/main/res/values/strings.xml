@@ -1,7 +1,7 @@
 <resources>
   <string name="app_name">Aura</string>
 
-  <string name="prompt_email">Email</string>
+  <string name="prompt_identifier">Identifiant</string>
   <string name="prompt_password">Mot de passe</string>
   <string name="action_sign_in">Connexion</string>
 

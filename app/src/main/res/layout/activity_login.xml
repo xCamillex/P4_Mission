@@ -14,12 +14,12 @@
   >
 
   <EditText
-    android:id="@+id/username"
+    android:id="@+id/identifier"
     android:layout_width="0dp"
     android:layout_height="wrap_content"
     android:layout_marginTop="96dp"
-    android:hint="@string/prompt_email"
-    android:inputType="textEmailAddress"
+    android:hint="@string/prompt_identifier"
+    android:inputType="text"
     android:selectAllOnFocus="true"
     app:layout_constraintEnd_toEndOf="parent"
     app:layout_constraintStart_toStartOf="parent"
@@ -38,7 +38,7 @@
     android:selectAllOnFocus="true"
     app:layout_constraintEnd_toEndOf="parent"
     app:layout_constraintStart_toStartOf="parent"
-    app:layout_constraintTop_toBottomOf="@+id/username"
+    app:layout_constraintTop_toBottomOf="@+id/identifier"
     />
 
   <Button
