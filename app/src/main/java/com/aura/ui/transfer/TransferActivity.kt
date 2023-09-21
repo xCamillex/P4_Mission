@@ -6,9 +6,15 @@ import android.view.View
 import androidx.appcompat.app.AppCompatActivity
 import com.aura.databinding.ActivityTransferBinding
 
+/**
+ * The transfer activity for the app.
+ */
 class TransferActivity : AppCompatActivity()
 {
 
+  /**
+   * The binding for the transfer layout.
+   */
   private lateinit var binding: ActivityTransferBinding
 
   override fun onCreate(savedInstanceState: Bundle?)

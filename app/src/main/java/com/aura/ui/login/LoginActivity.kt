@@ -7,9 +7,15 @@ import androidx.appcompat.app.AppCompatActivity
 import com.aura.databinding.ActivityLoginBinding
 import com.aura.ui.home.HomeActivity
 
+/**
+ * The login activity for the app.
+ */
 class LoginActivity : AppCompatActivity()
 {
 
+  /**
+   * The binding for the login layout.
+   */
   private lateinit var binding: ActivityLoginBinding
 
   override fun onCreate(savedInstanceState: Bundle?)

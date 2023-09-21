@@ -12,11 +12,20 @@ import com.aura.databinding.ActivityHomeBinding
 import com.aura.ui.login.LoginActivity
 import com.aura.ui.transfer.TransferActivity
 
+/**
+ * The home activity for the app.
+ */
 class HomeActivity : AppCompatActivity()
 {
 
+  /**
+   * The binding for the home layout.
+   */
   private lateinit var binding: ActivityHomeBinding
 
+  /**
+   * A callback for the result of starting the TransferActivity.
+   */
   private val startTransferActivityForResult =
     registerForActivityResult(ActivityResultContracts.StartActivityForResult()) { result: ActivityResult ->
       //TODO
