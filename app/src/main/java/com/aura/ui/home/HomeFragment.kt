@@ -13,6 +13,7 @@ import androidx.activity.result.contract.ActivityResultContracts
 import androidx.fragment.app.Fragment
 import com.aura.R
 import com.aura.databinding.FragmentHomeBinding
+import com.aura.ui.MainActivity
 import com.aura.ui.login.LoginFragment
 import com.aura.ui.transfer.TransferFragment
 
@@ -75,7 +76,7 @@ class HomeFragment : Fragment()
   override fun onOptionsItemSelected(item: MenuItem): Boolean {
     return when (item.itemId) {
       R.id.disconnect -> {
-        startActivity(Intent(requireActivity(), LoginFragment::class.java))
+        startActivity(Intent(requireActivity(), MainActivity::class.java))
         requireActivity().finish()
         true
       }

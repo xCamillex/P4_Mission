@@ -1,26 +1,39 @@
 package com.aura.ui.login
 
 import android.os.Bundle
+import android.text.Editable
+import android.text.TextWatcher
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import androidx.fragment.app.Fragment
+import androidx.fragment.app.viewModels
+import androidx.lifecycle.Observer
+import androidx.lifecycle.lifecycleScope
 import com.aura.R
 import com.aura.databinding.FragmentLoginBinding
 import com.aura.ui.home.HomeFragment
+import dagger.hilt.android.AndroidEntryPoint
+import kotlinx.coroutines.launch
 
 /**
- * The login activity for the app. L'activité de connexion pour l'application.
- */
+  * Ce fragment gère l'interface de connexion de l'application.
+  * Il utilise un LoginViewModel pour gérer l'état de la connexion (nom d'utilisateur, mot de passe, bouton de connexion activé/désactivé).
+  */
+@AndroidEntryPoint
 class LoginFragment : Fragment()
 {
 
-  /**
-   * The binding for the login layout.
-   */
+  // Binding de la vue
   private var _binding: FragmentLoginBinding? = null
+
+  //Getter accédant à la propriété _binding de manière non nulle (utilisé pour plus de concision).
   private val binding get() = _binding!!
 
+  // Initialise le ViewModel
+  private val loginViewModel: LoginViewModel by viewModels()
+
+  //Initialise le binding de l'interface.
   override fun onCreateView(
     inflater: LayoutInflater, container: ViewGroup?,
     savedInstanceState: Bundle?
@@ -29,12 +42,41 @@ class LoginFragment : Fragment()
     return binding.root
   }
 
+  // Configure les éléments de l'interface et lie les données du ViewModel à l'UI.
   override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
     super.onViewCreated(view, savedInstanceState)
 
     val login = binding.login
     val loading = binding.loading
+    val usernameEditText = binding.identifier
+    val passwordEditText = binding.password
 
+    // Observe les changements d'état du bouton de connexion
+    lifecycleScope.launch {
+      loginViewModel.isLoginButtonEnabled.collect { isEnabled ->
+        login.isEnabled = isEnabled
+      }
+    }
+
+    // Observe les changements dans les champs de texte
+    val textWatcher = object : TextWatcher {
+      override fun afterTextChanged(s: Editable?) {
+        // Appelle les méthodes du ViewModel pour mettre à jour les valeurs
+        when (s){
+          usernameEditText.text -> loginViewModel.onUsernameChanged(s.toString())
+          passwordEditText.text -> loginViewModel.onPasswordChanged(s.toString())
+        }
+      }
+
+      override fun beforeTextChanged(s: CharSequence?, start: Int, count: Int, after: Int) {}
+      override fun onTextChanged(s: CharSequence?, start: Int, before: Int, count: Int) {}
+    }
+
+    // Ajout du TextWatcher aux champs de texte
+    usernameEditText.addTextChangedListener(textWatcher)
+    passwordEditText.addTextChangedListener(textWatcher)
+
+    // Vérifie si les champs d'identification sont valides
     login.setOnClickListener {
       loading.visibility = View.VISIBLE
 
@@ -46,6 +88,7 @@ class LoginFragment : Fragment()
     }
   }
 
+  // Libère les ressources
   override fun onDestroyView() {
     super.onDestroyView()
     _binding = null
