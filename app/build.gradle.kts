@@ -4,6 +4,7 @@ plugins {
   id("org.jetbrains.kotlin.plugin.serialization") version "2.0.0"
   id("kotlin-kapt")
   id("com.google.dagger.hilt.android")
+  kotlin("kapt")
 
 }
 
@@ -28,11 +29,11 @@ android {
     }
   }
   compileOptions {
-    sourceCompatibility = JavaVersion.VERSION_1_8
-    targetCompatibility = JavaVersion.VERSION_1_8
+    sourceCompatibility = JavaVersion.VERSION_17
+    targetCompatibility = JavaVersion.VERSION_17
   }
   kotlinOptions {
-    jvmTarget = "1.8"
+    jvmTarget = "17"
   }
   buildFeatures {
     viewBinding = true
@@ -63,7 +64,6 @@ dependencies {
   implementation("androidx.annotation:annotation:1.8.2")
   implementation("androidx.constraintlayout:constraintlayout:2.1.4")
   implementation("com.google.firebase:firebase-crashlytics-buildtools:3.0.2")
-  implementation("androidx.activity:activity:1.9.2")
   testImplementation("junit:junit:4.13.2")
   androidTestImplementation("androidx.test.ext:junit:1.2.1")
   androidTestImplementation("androidx.test.espresso:espresso-core:3.6.1")
@@ -79,16 +79,19 @@ dependencies {
   implementation("io.ktor:ktor-server-cors:$ktorVersion")
 
   implementation("org.jetbrains.kotlinx:kotlinx-serialization-json:1.6.3")
+  implementation ("org.jetbrains.kotlinx:kotlinx-coroutines-core:1.8.1")
 
   // Hilt
   implementation("com.google.dagger:hilt-android:2.51.1")
   kapt("com.google.dagger:hilt-android-compiler:2.51.1")
 
-  // Retrofit + Moshi
+  // Retrofit + Moshi + Gson
   implementation("com.squareup.retrofit2:retrofit:2.11.0")
   implementation("com.squareup.retrofit2:converter-moshi:2.9.0")
   implementation("com.squareup.moshi:moshi-kotlin:1.15.0")
   implementation("com.squareup.moshi:moshi-kotlin-codegen:1.12.0")
+  implementation ("com.squareup.okhttp3:okhttp:4.12.0")
+  implementation ("com.squareup.retrofit2:converter-gson:2.9.0")
 
 }
 kapt { correctErrorTypes = true }

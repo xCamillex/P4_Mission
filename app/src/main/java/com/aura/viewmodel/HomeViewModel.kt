@@ -1,4 +1,4 @@
-package com.aura.ui.home
+package com.aura.viewmodel
 
 import androidx.lifecycle.ViewModel
 import kotlinx.coroutines.flow.MutableStateFlow

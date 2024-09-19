@@ -8,13 +8,14 @@ import android.view.View
 import android.view.ViewGroup
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.viewModels
-import androidx.lifecycle.Observer
 import androidx.lifecycle.lifecycleScope
 import com.aura.R
 import com.aura.databinding.FragmentLoginBinding
 import com.aura.ui.home.HomeFragment
+import com.aura.viewmodel.LoginViewModel
 import dagger.hilt.android.AndroidEntryPoint
-import kotlinx.coroutines.launch
+import kotlinx.coroutines.flow.launchIn
+import kotlinx.coroutines.flow.onEach
 
 /**
   * Ce fragment gère l'interface de connexion de l'application.
@@ -52,11 +53,14 @@ class LoginFragment : Fragment()
     val passwordEditText = binding.password
 
     // Observe les changements d'état du bouton de connexion
-    lifecycleScope.launch {
-      loginViewModel.isLoginButtonEnabled.collect { isEnabled ->
-        login.isEnabled = isEnabled
-      }
-    }
+    loginViewModel.isLoginButtonEnabled.onEach { isEnabled ->
+      login.isEnabled = isEnabled
+    }.launchIn(viewLifecycleOwner.lifecycleScope)
+
+    // Observe les changements d'état du chargement
+    loginViewModel.isLoading.onEach { isLoading ->
+      loading.visibility = if (isLoading) View.VISIBLE else View.GONE
+    }.launchIn(viewLifecycleOwner.lifecycleScope)
 
     // Observe les changements dans les champs de texte
     val textWatcher = object : TextWatcher {
@@ -78,14 +82,17 @@ class LoginFragment : Fragment()
 
     // Vérifie si les champs d'identification sont valides
     login.setOnClickListener {
-      loading.visibility = View.VISIBLE
-
-      // Navigate to HomeFragment
+      //Appelle la fonction navigateToHome de loginViewModel
+      loginViewModel.navigateToHome()
+    }
+    
+    loginViewModel.navigateToHomeEvent.onEach {
+      // Replace the current fragment with HomeFragment
       requireActivity().supportFragmentManager.beginTransaction()
         .replace(R.id.fragment_container, HomeFragment())
         .addToBackStack(null)
         .commit()
-    }
+    }.launchIn(viewLifecycleOwner.lifecycleScope)
   }
 
   // Libère les ressources
