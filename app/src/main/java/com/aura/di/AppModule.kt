@@ -1,6 +1,7 @@
 package com.aura.di
 
-import com.aura.data.model.login.LoginApi
+import com.aura.data.repository.LoginRepository
+import com.aura.data.service.ApiService
 import dagger.Module
 import dagger.Provides
 import dagger.hilt.InstallIn
@@ -11,20 +12,20 @@ import javax.inject.Singleton
 
 @Module
 @InstallIn(SingletonComponent::class)
-object LoginModule {
-    private const val BASE_URL = "http://10.0.2.2:8080"
+object AppModule {
 
-    @Singleton
     @Provides
+    @Singleton
     fun provideRetrofit(): Retrofit {
         return Retrofit.Builder()
-            .baseUrl(BASE_URL)
+            .baseUrl(AppConfig.BASE_URL)
             .addConverterFactory(GsonConverterFactory.create())
             .build()
     }
-    @Singleton
     @Provides
-    fun provideLoginApi(retrofit: Retrofit): LoginApi {
-        return retrofit.create(LoginApi::class.java)
+    @Singleton
+    fun provideApiService(retrofit: Retrofit): ApiService {
+        return retrofit.create(ApiService::class.java)
     }
 }
+
