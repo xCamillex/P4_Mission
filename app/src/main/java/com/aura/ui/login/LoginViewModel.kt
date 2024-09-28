@@ -3,9 +3,9 @@ package com.aura.ui.login
 import android.util.Log
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
-import com.aura.data.login.ConnectionState
-import com.aura.data.login.LoginRequest
-import com.aura.data.repository.LoginRepository
+import com.aura.model.login.ConnectionState
+import com.aura.model.login.LoginRequest
+import com.aura.data.repository.AuraRepository
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
@@ -13,7 +13,7 @@ import kotlinx.coroutines.launch
 import javax.inject.Inject
 
 @HiltViewModel
-class LoginViewModel @Inject constructor(private val loginRepository: LoginRepository): ViewModel()  {
+class LoginViewModel @Inject constructor(private val auraRepository: AuraRepository): ViewModel()  {
     private val _state = MutableStateFlow(ConnectionState.INITIAL)
     val state: StateFlow<ConnectionState> = _state
     fun checkFields(identifier: String, password: String) {
@@ -29,7 +29,7 @@ class LoginViewModel @Inject constructor(private val loginRepository: LoginRepos
         viewModelScope.launch {
             _state.value = ConnectionState.CONNECTING
             try {
-                val loginResponse = loginRepository.login(LoginRequest(identifier, password))
+                val loginResponse = auraRepository.login(LoginRequest(identifier, password))
                 // Check the 'success' property in the response body (assuming your API uses it)
                 if (loginResponse.granted) { // Or whatever indicates success in your API response
                     _state.value = ConnectionState.CONNECTED

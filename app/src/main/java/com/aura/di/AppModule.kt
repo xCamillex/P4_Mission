@@ -1,6 +1,5 @@
 package com.aura.di
 
-import com.aura.data.repository.LoginRepository
 import com.aura.data.service.ApiService
 import dagger.Module
 import dagger.Provides

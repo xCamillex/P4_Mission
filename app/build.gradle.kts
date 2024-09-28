@@ -5,6 +5,7 @@ plugins {
   id("org.jetbrains.kotlin.android")
   id("com.google.dagger.hilt.android")
   id("kotlin-kapt")
+  id("androidx.navigation.safeargs.kotlin")
   kotlin("kapt")
 }
 
@@ -77,6 +78,12 @@ dependencies {
   androidTestImplementation("androidx.test.ext:junit:1.2.1")
   androidTestImplementation("androidx.test.espresso:espresso-core:3.6.1")
   testImplementation ("io.mockk:mockk:1.13.2")
-  testImplementation ("org.jetbrains.kotlinx:kotlinx-coroutines-test:1.7.1")
+  testImplementation ("org.jetbrains.kotlinx:kotlinx-coroutines-test:1.7.3")
+
+  implementation("androidx.navigation:navigation-fragment-ktx:2.8.1")
+  implementation ("androidx.navigation:navigation-ui-ktx:2.8.1" )
+
+  // Safe Args plugin
+  kapt ("androidx.navigation:navigation-safe-args-gradle-plugin:2.8.1")
 
 }

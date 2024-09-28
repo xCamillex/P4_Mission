@@ -11,7 +11,7 @@ import androidx.fragment.app.Fragment
 import androidx.fragment.app.viewModels
 import androidx.lifecycle.lifecycleScope
 import com.aura.R
-import com.aura.data.login.ConnectionState
+import com.aura.model.login.ConnectionState
 import com.aura.databinding.FragmentLoginBinding
 import com.aura.ui.home.HomeFragment
 import dagger.hilt.android.AndroidEntryPoint
@@ -136,7 +136,7 @@ class LoginFragment : Fragment() {
               binding.loading.visibility = View.GONE
             showToast(message)
               requireActivity().supportFragmentManager.beginTransaction()
-                .replace(R.id.fragment_container, HomeFragment())
+                .replace(R.id.fragment_container, HomeFragment(binding.identifier.text.toString().trim()))
                 .addToBackStack(null)
                 .commit()
             }

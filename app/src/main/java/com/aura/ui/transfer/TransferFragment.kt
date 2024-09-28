@@ -42,7 +42,7 @@ class TransferFragment : Fragment()
 
       // Replace the current fragment with HomeFragment
       requireActivity().supportFragmentManager.beginTransaction()
-        .replace(R.id.fragment_container, HomeFragment())
+        .replace(R.id.fragment_container, HomeFragment(userID = "1234"))
         .addToBackStack(null)
         .commit()
     }
