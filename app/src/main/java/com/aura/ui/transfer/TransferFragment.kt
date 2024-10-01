@@ -5,21 +5,26 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import androidx.fragment.app.Fragment
+import androidx.fragment.app.viewModels
+import androidx.lifecycle.lifecycleScope
 import com.aura.R
 import com.aura.databinding.FragmentTransferBinding
 import com.aura.ui.home.HomeFragment
+import kotlinx.coroutines.flow.collectLatest
+import kotlinx.coroutines.launch
 
 /**
  * The transfer activity for the app. L'activité de transfert pour l'application.
  */
-class TransferFragment : Fragment()
-{
+class TransferFragment : Fragment() {
 
   /**
    * The binding for the transfer layout.
    */
   private var _binding: FragmentTransferBinding? = null
   private val binding get() = _binding!!
+
+  private val transferViewModel: TransferViewModel by viewModels()
 
   override fun onCreateView(
     inflater: LayoutInflater, container: ViewGroup?,
@@ -37,10 +42,26 @@ class TransferFragment : Fragment()
     val transfer = binding.transfer
     val loading = binding.loading
 
+    binding.recipient.setOnEditorActionListener { _, _, _ ->
+      transferViewModel.updateRecipient(binding.recipient.text.toString())
+      true
+    }
+    binding.amount.setOnEditorActionListener { _, _, _ ->
+      transferViewModel.updateAmount(binding.amount.text.toString())
+      true
+    }
+
+// Observer l'état de cliquabilité du bouton de transfert
+    lifecycleScope.launch {
+      transferViewModel.isTransferEnabled.collectLatest { isEnabled ->
+        binding.transfer.isEnabled = isEnabled
+      }
+    }
+
     transfer.setOnClickListener {
       loading.visibility = View.VISIBLE
 
-      // Replace the current fragment with HomeFragment
+      // Remplace le fragment actuel par HomeFragment
       requireActivity().supportFragmentManager.beginTransaction()
         .replace(R.id.fragment_container, HomeFragment(userID = "1234"))
         .addToBackStack(null)

@@ -83,7 +83,7 @@ class HomeFragment (val userID: String): Fragment() {
                     }
                     is AccountsState.Error -> {
                         binding.loading.visibility = View.GONE
-                        Toast.makeText(requireContext(), state.message, Toast.LENGTH_SHORT).show()
+                        Toast.makeText(requireContext(), "Erreur: problème réseau", Toast.LENGTH_SHORT).show()
                         binding.balance.text = "Error"
 
                         if (state.showRetryButton) {
