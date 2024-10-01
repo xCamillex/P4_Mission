@@ -3,6 +3,8 @@ package com.aura.data.service
 import com.aura.model.home.UserAccount
 import com.aura.model.login.LoginRequest
 import com.aura.model.login.LoginResponse
+import com.aura.model.transfer.TransferRequest
+import com.aura.model.transfer.TransferResponse
 import retrofit2.Response
 import retrofit2.http.Body
 import retrofit2.http.GET
@@ -16,4 +18,6 @@ interface ApiService {
     @GET("/accounts/{id}")
     suspend fun getUserAccounts(@Path("id") id: String): Response<List<UserAccount>>
 
+    @POST("/transfer")
+    suspend fun makeTransfer(@Body transferRequest: TransferRequest): TransferResponse
 }

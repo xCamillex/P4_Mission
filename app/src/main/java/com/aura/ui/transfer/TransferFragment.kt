@@ -10,12 +10,14 @@ import androidx.lifecycle.lifecycleScope
 import com.aura.R
 import com.aura.databinding.FragmentTransferBinding
 import com.aura.ui.home.HomeFragment
+import dagger.hilt.android.AndroidEntryPoint
 import kotlinx.coroutines.flow.collectLatest
 import kotlinx.coroutines.launch
 
 /**
  * The transfer activity for the app. L'activité de transfert pour l'application.
  */
+@AndroidEntryPoint
 class TransferFragment : Fragment() {
 
   /**
