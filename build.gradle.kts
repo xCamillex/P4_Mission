@@ -4,8 +4,3 @@ plugins {
   id("org.jetbrains.kotlin.android") version "1.8.0" apply false
   id("com.google.dagger.hilt.android") version "2.51.1" apply false
 }
-buildscript {
-  dependencies {
-    classpath("androidx.navigation:navigation-safe-args-gradle-plugin:2.8.1") // Use the appropriate version
-  }
-}

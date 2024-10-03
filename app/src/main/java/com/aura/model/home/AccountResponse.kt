@@ -8,7 +8,8 @@ import com.squareup.moshi.Json
  * @property main Indique si le compte est le compte principal de l'utilisateur.
  * @property balance Le solde du compte.
  */
-data class UserAccount (
-   @Json(name = "id") val id: String,
-    @Json(name = "main") val main: Boolean,
-    @Json(name = "balance") val balance: Double)
+data class AccountResponse(
+    val id: String,
+    val main: Boolean,
+    val balance: Double
+)

@@ -1,6 +1,6 @@
 package com.aura.data.service
 
-import com.aura.model.home.UserAccount
+import com.aura.model.home.AccountResponse
 import com.aura.model.login.LoginRequest
 import com.aura.model.login.LoginResponse
 import com.aura.model.transfer.TransferRequest
@@ -13,11 +13,11 @@ import retrofit2.http.Path
 
 interface ApiService {
     @POST("/login")
-    suspend fun login(@Body loginRequest: LoginRequest): LoginResponse // Return LoginResponse directly
+    suspend fun login(@Body request: LoginRequest): Response<LoginResponse>
 
     @GET("/accounts/{id}")
-    suspend fun getUserAccounts(@Path("id") id: String): Response<List<UserAccount>>
+    suspend fun accounts(@Path("id") id: String): Response<List<AccountResponse>>
 
     @POST("/transfer")
-    suspend fun makeTransfer(@Body transferRequest: TransferRequest): TransferResponse
+    suspend fun transfer(@Body request: TransferRequest): Response<TransferResponse>
 }
