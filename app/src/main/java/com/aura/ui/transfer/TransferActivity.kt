@@ -16,13 +16,15 @@ import kotlinx.coroutines.delay
 import kotlinx.coroutines.launch
 
 /**
- * The transfer activity for the app. L'activité de transfert pour l'application.
+ * Activity pour gérer le transfert de fonds.
+ * Cette activité permet à l'utilisateur de spécifier un destinataire et un montant, puis d'initier un transfert.
+ * Elle utilise le ViewModel `TransferViewModel` pour gérer la logique de transfert et l'état de l'interface utilisateur.
  */
 @AndroidEntryPoint
 class TransferActivity : AppCompatActivity() {
 
     /**
-     * The binding for the transfer layout.
+     * La liaison pour la mise en page de l'activité de transfert.
      */
     private lateinit var binding: ActivityTransferBinding
     private val viewModel: TransferViewModel by viewModels()
@@ -30,17 +32,21 @@ class TransferActivity : AppCompatActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
 
+        // Inflate le layout et configure la vue
         binding = ActivityTransferBinding.inflate(layoutInflater)
         setContentView(binding.root)
 
+        // Récupère l'identifiant de l'utilisateur depuis SharedPreferences
         val sharedPreferences = getSharedPreferences("user", MODE_PRIVATE)
         val sender = sharedPreferences.getString("identifier", "") ?: ""
 
+        // Liaison des vues
         val recipient = binding.recipient
         val amount = binding.amount
         val transfer = binding.transfer
         val loading = binding.loading
 
+        // Gestion de l'événement de clic sur le bouton de transfert
         transfer.setOnClickListener {
             viewModel.onTransferClicked(
                 sender = sender,
@@ -49,6 +55,7 @@ class TransferActivity : AppCompatActivity() {
             )
         }
 
+        // Collecte des événements de navigation pour gérer la redirection
         lifecycleScope.launch {
             viewModel.navigationEvents.collect { event ->
                 when (event) {
@@ -61,13 +68,16 @@ class TransferActivity : AppCompatActivity() {
             }
         }
 
+        // Ajoute des écouteurs de texte pour mettre à jour le ViewModel
         recipient.addTextChangedListener { viewModel.onRecipientChanged(it.toString()) }
         amount.addTextChangedListener { viewModel.onAmountChanged(it.toString().toDouble()) }
 
+        // Collecte de l'état de l'interface utilisateur
         lifecycleScope.launch {
             viewModel.uiState.collect { uiState ->
                 loading.visibility = if (uiState.isLoading) View.VISIBLE else View.GONE
 
+                // Affiche un message d'erreur si nécessaire
                 if (uiState.error.isNotEmpty()) {
                     Toast.makeText(this@TransferActivity, uiState.error, Toast.LENGTH_LONG).show()
                     viewModel.resetError()

@@ -19,9 +19,9 @@ import kotlinx.coroutines.delay
 import kotlinx.coroutines.launch
 
 /**
- * Cette activité gère l'interface de connexion de l'application. Elle utilise un
- * com.aura.viewmodel.login.LoginViewModel pour gérer l'état de la connexion (nom d'utilisateur,
- * mot de passe, bouton de connexion activé/désactivé).
+ * Activity pour gérer l'authentification des utilisateurs.
+ * Cette activité permet aux utilisateurs de se connecter en fournissant un identifiant et un mot de passe.
+ * Elle utilise le ViewModel `LoginViewModel` pour gérer l'état de l'interface utilisateur et les opérations de connexion.
  */
 @AndroidEntryPoint
 class LoginActivity : AppCompatActivity() {
@@ -31,9 +31,12 @@ class LoginActivity : AppCompatActivity() {
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
+
+        // Inflate le layout et configure la vue
         binding = ActivityLoginBinding.inflate(layoutInflater)
         setContentView(binding.root)
 
+        // Liaison des vues
         val login = binding.login
         val loading = binding.loading
         val identifier = binding.identifier
@@ -41,11 +44,13 @@ class LoginActivity : AppCompatActivity() {
         val errorText = binding.errorText
         val retryButton = binding.retryButton
 
+        // Collecte de l'état de l'interface utilisateur
         lifecycleScope.launch {
             viewModel.uiState.collect { uiState ->
                 loading.visibility = if (uiState.isLoading) View.VISIBLE else View.GONE
                 login.isEnabled = uiState.isLoginButtonEnabled
 
+                // Affichage des messages d'erreur et gestion de la visibilité du bouton de réessai
                 if (uiState.showErrorMessage) {
                     errorText.visibility = View.VISIBLE
                     errorText.text = uiState.error
@@ -57,19 +62,25 @@ class LoginActivity : AppCompatActivity() {
             }
         }
 
+        // Ajoute des écouteurs de texte pour mettre à jour le ViewModel
         identifier.addTextChangedListener { viewModel.onIdentifierChanged(it.toString()) }
         password.addTextChangedListener { viewModel.onPasswordChanged(it.toString()) }
 
+        // Gestion de l'événement de clic sur le bouton de connexion
         login.setOnClickListener {
             viewModel.onLoginClicked()
+
+            // Sauvegarde de l'identifiant dans SharedPreferences
             val sharedPreferences = getSharedPreferences("user", MODE_PRIVATE)
             val editor = sharedPreferences.edit()
             editor.putString("identifier", identifier.text.toString())
             editor.commit()
         }
 
+        // Gestion de l'événement de clic sur le bouton de réessai
         retryButton.setOnClickListener { viewModel.onRetryClicked() }
 
+        // Collecte des événements de navigation pour gérer les redirections
         lifecycleScope.launch {
             viewModel.navigationEvent.collect { event ->
                 when (event) {
@@ -94,6 +105,9 @@ class LoginActivity : AppCompatActivity() {
         }
     }
 
+    /**
+     * Affiche un Snackbar en haut de l'écran avec le message spécifié.
+     */
     private fun showSnackbarAtTop(message: String) {
         val snackbar = Snackbar.make(binding.root, message, Snackbar.LENGTH_LONG)
         val view = snackbar.view

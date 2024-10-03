@@ -3,10 +3,10 @@ package com.aura.model.home
 import com.squareup.moshi.Json
 
 /**
- * Représente un compte.
- * @property id L'ID du compte.
- * @property main Indique si le compte est le compte principal de l'utilisateur.
- * @property balance Le solde du compte.
+ * Classe de données représentant la réponse contenant les informations d'un compte.
+ * @param id L'identifiant unique du compte.
+ * @param main Indique si ce compte est le compte principal (true) ou non (false).
+ * @param balance Le solde actuel du compte.
  */
 data class AccountResponse(
     val id: String,

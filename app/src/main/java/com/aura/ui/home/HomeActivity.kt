@@ -23,34 +23,33 @@ import dagger.hilt.android.AndroidEntryPoint
 import kotlinx.coroutines.launch
 
 /**
- * The home activity for the app. L'activité principale de l'application.
+ * Activity pour afficher la page d'accueil de l'application.
+ * Cette activité affiche le solde total des comptes de l'utilisateur et permet de transférer de l'argent.
+ * Elle utilise le ViewModel `HomeViewModel` pour récupérer et gérer l'état des comptes de l'utilisateur.
  */
 @AndroidEntryPoint
 class HomeActivity : AppCompatActivity() {
 
     private val viewModel: HomeViewModel by viewModels()
 
-    /**
-     * The binding for the home layout.
-     */
     private lateinit var binding: ActivityHomeBinding
 
-    /**
-     * A callback for the result of starting the TransferActivity.
-     */
+    // Enregistre le résultat de l'activité de transfert
     private val startTransferActivityForResult =
         registerForActivityResult(ActivityResultContracts.StartActivityForResult()) { result: ActivityResult ->
             if (result.resultCode == RESULT_OK) {
                 val homeIntent = Intent(this@HomeActivity, HomeActivity::class.java)
                 startActivity(homeIntent)
-
+                // Si le transfert est réussi, rechargez les comptes
                 getAccounts()
             } else {
+                // Affiche un message d'erreur si le transfert échoue
                 Toast.makeText(this@HomeActivity, "Erreur lors du transfert", Toast.LENGTH_LONG)
                     .show()
             }
         }
 
+    // Fonction pour récupérer les comptes de l'utilisateur
     private fun getAccounts() {
         val sharedPreferences = getSharedPreferences("user", MODE_PRIVATE)
         val login = sharedPreferences.getString("identifier", "") ?: ""
@@ -62,6 +61,7 @@ class HomeActivity : AppCompatActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
 
+        // Inflate le layout et configure la vue
         binding = ActivityHomeBinding.inflate(layoutInflater)
         setContentView(binding.root)
 
@@ -72,19 +72,23 @@ class HomeActivity : AppCompatActivity() {
 
         balance.text = "indéfini"
 
+        // Récupère les comptes de l'utilisateur
         getAccounts()
 
+        // Gère le clic sur le bouton de réessai
         retry.setOnClickListener {
             viewModel.resetError()
             viewModel.resetRetry()
             getAccounts()
         }
 
+        // Collecte l'état de l'interface utilisateur
         lifecycleScope.launch {
             viewModel.uiState.collect { uiState ->
                 loading.visibility = if (uiState.isLoading) View.VISIBLE else View.GONE
                 retry.visibility = if (uiState.showRetryButton) View.VISIBLE else View.GONE
 
+                // Affiche les messages d'erreur le cas échéant
                 if (uiState.error.isNotEmpty()) {
                     Toast.makeText(this@HomeActivity, uiState.error, Toast.LENGTH_LONG).show()
                     viewModel.resetError()
@@ -92,11 +96,13 @@ class HomeActivity : AppCompatActivity() {
             }
         }
 
+        // Observe les comptes de l'utilisateur et calcule le solde total
         viewModel.accounts.observe(this) { accounts ->
             val balanceSum = accounts.map { it.balance }.sum()
             balance.text = balanceSum.toString() + " €"
         }
 
+        // Démarre l'activité de transfert lors d'un clic sur le bouton de transfert
         transfer.setOnClickListener {
             startTransferActivityForResult.launch(
                 Intent(
@@ -115,6 +121,7 @@ class HomeActivity : AppCompatActivity() {
     override fun onOptionsItemSelected(item: MenuItem): Boolean {
         return when (item.itemId) {
             R.id.disconnect -> {
+                // Déconnecte l'utilisateur et redirige vers la page de connexion
                 startActivity(Intent(this@HomeActivity, LoginActivity::class.java))
                 finish()
                 true

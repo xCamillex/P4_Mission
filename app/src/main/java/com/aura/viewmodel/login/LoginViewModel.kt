@@ -14,15 +14,27 @@ import kotlinx.coroutines.flow.update
 import kotlinx.coroutines.launch
 import javax.inject.Inject
 
+/**
+ * ViewModel pour l'écran de connexion.
+ * Ce ViewModel gère l'état de l'interface utilisateur et les événements de navigation liés à la connexion de l'utilisateur.
+ * Il utilise un dépôt (AuraRepository) pour effectuer des opérations de connexion et gérer les erreurs.
+ *
+ * @param repository L'instance de AuraRepository utilisée pour interagir avec l'API.
+ */
 @HiltViewModel
 class LoginViewModel @Inject constructor(private val repository: AuraRepository) : ViewModel() {
-
+    // État de l'interface utilisateur pour l'écran de connexion
     private val _uiState = MutableStateFlow(LoginUiState())
     val uiState: StateFlow<LoginUiState> = _uiState.asStateFlow()
 
+    // Canal pour gérer les événements de navigation
     private val _navigationEvent = Channel<NavigationEvent>(Channel.CONFLATED)
     val navigationEvent = _navigationEvent.receiveAsFlow()
 
+    /**
+     * Met à jour l'état lorsque l'identifiant change.
+     * @param identifier Le nouvel identifiant de l'utilisateur.
+     */
     fun onIdentifierChanged(identifier: String) {
         _uiState.update { currentState ->
             currentState.copy(
@@ -32,6 +44,10 @@ class LoginViewModel @Inject constructor(private val repository: AuraRepository)
         }
     }
 
+    /**
+     * Met à jour l'état lorsque le mot de passe change.
+     * @param password Le nouveau mot de passe de l'utilisateur.
+     */
     fun onPasswordChanged(password: String) {
         _uiState.update { currentState ->
             currentState.copy(
@@ -41,6 +57,10 @@ class LoginViewModel @Inject constructor(private val repository: AuraRepository)
         }
     }
 
+    /**
+     * Gère le clic sur le bouton de connexion.
+     * Effectue une validation des données et appelle le dépôt pour exécuter la connexion.
+     */
     fun onLoginClicked() {
         viewModelScope.launch {
             _uiState.update { currentState -> currentState.copy(isLoading = true, showErrorMessage = false, showRetryButton = false) }
@@ -78,6 +98,10 @@ class LoginViewModel @Inject constructor(private val repository: AuraRepository)
         }
     }
 
+    /**
+     * Gère le clic sur le bouton de réessai.
+     * Réessaie la connexion en appelant la méthode onLoginClicked.
+     */
     fun onRetryClicked() {
         onLoginClicked() // Réessayer la connexion
     }
